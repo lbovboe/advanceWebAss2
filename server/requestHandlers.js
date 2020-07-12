@@ -54,10 +54,13 @@ function reqSearchInfo(request, response) {
   var data = "";
   request.on("data", function (chunk) {
     data += chunk;
-    console.log(data);
+    console.log("inside" + data);
   });
-  console.log(data);
   request.on("end", function () {
+    
+    console.log("suc "+data);
+    var dataObj = JSON.parse(data);
+    console.log(dataObj.year);
     response.end("successful");
   });
 }
