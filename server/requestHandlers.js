@@ -20,16 +20,19 @@ function reqBg(request, response) {
   response.writeHead(200, { "Content-Type": "image/png" });
   fs.createReadStream("../client/bgImg.png").pipe(response);
 }
-function reqAjax(request,response){
+function reqAjax(request, response) {
   console.log("request handler 'ajax' was called");
   response.writeHead(200, { "Content-Type": "text/js" });
   fs.createReadStream("../client/ajax.js").pipe(response);
 }
-function reqAjaxData(request,response){
+function reqAjaxData(request, response) {
   console.log("request handler 'ajaxData' was called");
-  console.log("1");
-  var jsonData2010 ="";
-  console.log("2");
+  var jsonData2010 = "";
+  var data = "";
+  request.on("data", function (chunk) {
+    data += chunk;
+  });
+  console.log(data);
   requestMod.get(
     "http://it.murdoch.edu.au/~S900432D/ict375/data/2010.json",
     function (error, response2, body) {
@@ -40,44 +43,28 @@ function reqAjaxData(request,response){
         //var json = JSON.parse(jsonData2010);
 
         response.end(jsonData2010);
-        
       } else {
         console.log("error");
       }
     }
   );
-  console.log("startdata");
-  
 }
 function reqSearchInfo(request, response) {
   console.log("request searchInfo was called");
-  if (request.method == "GET") {
-    //return reqStart(request, response);
-    var q = url.parse(request.url, true).query;
-    console.log(q);
-  } else if (request.method == "POST") {
-    var data = "";
-    request.on("data", function (chunk) {
-      data += chunk;
-    });
-    request.on("end", function () {
-      var formdata = querystring.parse(data);
-      console.log(data);
-      // console.log(typeof formdata);
-      // console.log(formdata);
-      // var arr = Object.entries(formdata);
-      // console.log(arr[0][1]);
-      // var searchDegree = arr[0][1].toLowerCase();
-      // var count = 0;
-      
-      response.end();
-    });
-  }
+  var data = "";
+  request.on("data", function (chunk) {
+    data += chunk;
+    console.log(data);
+  });
+  console.log(data);
+  request.on("end", function () {
+    response.end("successful");
+  });
 }
+
 exports.reqStart = reqStart;
 exports.reqStyle = reqStyle;
 exports.reqBg = reqBg;
-exports.reqAjax =reqAjax;
+exports.reqAjax = reqAjax;
 exports.reqAjaxData = reqAjaxData;
 exports.reqSearchInfo = reqSearchInfo;
-
