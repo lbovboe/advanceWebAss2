@@ -61,16 +61,20 @@ function reqSearchInfo(request, response) {
     var dataObj = JSON.parse(data);
     // get year from the data
     var year = dataObj.year;
+    var sMonth = parseInt(dataObj.sMonth);
+    var eMonth = parseInt(dataObj.eMonth);
+
     requestMod.get(
       `http://it.murdoch.edu.au/~S900432D/ict375/data/${year}.json`,
       function (error, response2, body) {
         if (!error && response2.statusCode == 200) {
           // Continue with your processing here.
+          console.log(year);
+          console.log(sMonth);
+          console.log(eMonth);
           var jsonData = body;
           console.log(typeof jsonData);
           var jsObj = JSON.parse(jsonData);
-          var sMonth = 5;
-          var eMonth = 7;
           var finalObj = getMonthsData(sMonth, eMonth, jsObj);
           var dataBack = JSON.stringify(finalObj);
           response.end(dataBack);
