@@ -68,9 +68,12 @@ function reqSearchInfo(request, response) {
           // Continue with your processing here.
           var jsonData = body;
           console.log(typeof jsonData);
-          //var json = JSON.parse(jsonData2010);
-  
-          response.end(jsonData);
+          var jsObj = JSON.parse(jsonData);
+          var sMonth = 5;
+          var eMonth = 7;
+          var finalObj = getMonthsData(sMonth, eMonth, jsObj);
+          var dataBack = JSON.stringify(finalObj);
+          response.end(dataBack);
         } else {
           console.log("error");
         }
@@ -78,7 +81,39 @@ function reqSearchInfo(request, response) {
     );
   });
 }
+var getMonthsData = function (startMonth, endMonth, obj) {
+  var count = 0;
+  var totalSr = 0;
+  var totalWs = 0;
+  var avg = 0;
+  var avg2dp = 0;
+  var arrSr = [];
+  var arrWs = [];
+  var length = obj.weather.record.length;
+  for (var k = startMonth; k < endMonth + 1; k++) {
+    count = 0;
+    totalSr = 0;
+    totalWs = 0;
 
+    for (var i = 0; i < length; i++) {
+      var data = parseInt(obj.weather.record[i].date.substring(3, 5));
+      if (data == k) {
+        count++;
+        totalSr += obj.weather.record[i].sr;
+        totalWs += obj.weather.record[i].ws;
+      }
+    }
+    avg = totalWs / count;
+    avg2dp = avg.toFixed(2);
+    arrSr.push(totalSr);
+    arrWs.push(avg2dp);
+  }
+  var resultObj = {
+    ws: arrWs,
+    sr: arrSr,
+  };
+  return resultObj;
+};
 exports.reqStart = reqStart;
 exports.reqStyle = reqStyle;
 exports.reqBg = reqBg;
