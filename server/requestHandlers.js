@@ -3,6 +3,8 @@
 var querystring = require("querystring");
 var fs = require("fs");
 var requestMod = require("request");
+var ObjTree = require("xml-objtree");
+var objTree = new ObjTree();
 
 function reqStart(request, response) {
   console.log("Request handler 'start' was called.");
@@ -63,26 +65,38 @@ function reqSearchInfo(request, response) {
     var year = dataObj.year;
     var sMonth = parseInt(dataObj.sMonth);
     var eMonth = parseInt(dataObj.eMonth);
-
-    requestMod.get(
-      `http://it.murdoch.edu.au/~S900432D/ict375/data/${year}.json`,
-      function (error, response2, body) {
-        if (!error && response2.statusCode == 200) {
-          // Continue with your processing here.
-          console.log(year);
-          console.log(sMonth);
-          console.log(eMonth);
-          var jsonData = body;
-          console.log(typeof jsonData);
-          var jsObj = JSON.parse(jsonData);
-          var finalObj = getMonthsData(sMonth, eMonth, jsObj);
-          var dataBack = JSON.stringify(finalObj);
-          response.end(dataBack);
-        } else {
-          console.log("error");
+    if(parseInt(year) >= 2006 && parseInt(year) <= 2009){
+      requestMod.get(
+        `http://it.murdoch.edu.au/~S900432D/ict375/data/${year}.xml`,
+        function (error, response2, body) {
+          if (!error && response2.statusCode == 200) {
+            // Continue with your processing here.
+            console.log(body);
+            response.end(body);
+          } else {
+            console.log("error");
+          }
         }
-      }
-    );
+      );
+    }else{
+      requestMod.get(
+        `http://it.murdoch.edu.au/~S900432D/ict375/data/${year}.json`,
+        function (error, response2, body) {
+          if (!error && response2.statusCode == 200) {
+            // Continue with your processing here.
+            var jsonData = body;
+            console.log(typeof jsonData);
+            var jsObj = JSON.parse(jsonData);
+            var finalObj = getMonthsData(sMonth, eMonth, jsObj);
+            var dataBack = JSON.stringify(finalObj);
+            response.end(dataBack);
+          } else {
+            console.log("error");
+          }
+        }
+      );
+    }
+    
   });
 }
 var getMonthsData = function (startMonth, endMonth, obj) {
