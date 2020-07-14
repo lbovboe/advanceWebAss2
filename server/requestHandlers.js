@@ -57,11 +57,25 @@ function reqSearchInfo(request, response) {
     console.log("inside" + data);
   });
   request.on("end", function () {
-    
-    console.log("suc "+data);
+    // make into js object from JSON
     var dataObj = JSON.parse(data);
-    console.log(dataObj.year);
-    response.end("successful");
+    // get year from the data
+    var year = dataObj.year;
+    requestMod.get(
+      `http://it.murdoch.edu.au/~S900432D/ict375/data/${year}.json`,
+      function (error, response2, body) {
+        if (!error && response2.statusCode == 200) {
+          // Continue with your processing here.
+          var jsonData = body;
+          console.log(typeof jsonData);
+          //var json = JSON.parse(jsonData2010);
+  
+          response.end(jsonData);
+        } else {
+          console.log("error");
+        }
+      }
+    );
   });
 }
 
