@@ -71,8 +71,11 @@ function reqSearchInfo(request, response) {
         function (error, response2, body) {
           if (!error && response2.statusCode == 200) {
             // Continue with your processing here.
-            console.log(body);
-            response.end(body);
+            console.log("Getting data from xml external file");
+            var jsonObject = objTree.parseXML(body);
+            var finalObj1 = getMonthsDataXML(sMonth, eMonth, jsonObject);
+            var dataBack1 = JSON.stringify(finalObj1);
+            response.end(dataBack1);
           } else {
             console.log("error");
           }
@@ -84,6 +87,7 @@ function reqSearchInfo(request, response) {
         function (error, response2, body) {
           if (!error && response2.statusCode == 200) {
             // Continue with your processing here.
+            console.log("Getting data from json file");
             var jsonData = body;
             console.log(typeof jsonData);
             var jsObj = JSON.parse(jsonData);
@@ -104,7 +108,9 @@ var getMonthsData = function (startMonth, endMonth, obj) {
   var totalSr = 0;
   var totalWs = 0;
   var avg = 0;
+  var avgWsKm =0;
   var avg2dp = 0;
+  var srKwh = 0;
   var arrSr = [];
   var arrWs = [];
   var length = obj.weather.record.length;
@@ -115,15 +121,62 @@ var getMonthsData = function (startMonth, endMonth, obj) {
 
     for (var i = 0; i < length; i++) {
       var data = parseInt(obj.weather.record[i].date.substring(3, 5));
+      var sr = parseInt(obj.weather.record[i].sr);
       if (data == k) {
         count++;
-        totalSr += obj.weather.record[i].sr;
+        
         totalWs += obj.weather.record[i].ws;
+        if(sr>=100){
+          totalSr += sr;
+        }
       }
     }
     avg = totalWs / count;
-    avg2dp = avg.toFixed(2);
-    arrSr.push(totalSr);
+    avgWsKm = (avg*3600)/1000;
+    avg2dp = avgWsKm.toFixed(2);
+    srKwh = (totalSr/6000).toFixed(2);
+    arrSr.push(srKwh);
+    arrWs.push(avg2dp);
+  }
+  var resultObj = {
+    ws: arrWs,
+    sr: arrSr,
+  };
+  return resultObj;
+};
+
+var getMonthsDataXML = function (startMonth, endMonth, obj) {
+  var count = 0;
+  var totalSr = 0;
+  var totalWs = 0;
+  var avg = 0;
+  var avg2dp = 0;
+  var avgWsKm =0;
+  var srKwh = 0;
+  var arrSr = [];
+  var arrWs = [];
+  var length = obj.weather.record.length;
+  for (var k = startMonth; k < endMonth + 1; k++) {
+    count = 0;
+    totalSr = 0;
+    totalWs = 0;
+
+    for (var i = 0; i < length; i++) {
+      var data = parseInt(obj.weather.record[i].date.substring(3, 5));
+      var sr = parseInt(obj.weather.record[i].sr);
+      if (data == k) {
+        count++;
+        totalWs += parseInt(obj.weather.record[i].ws);
+        if(sr>=100){
+          totalSr += sr;
+        }
+      }
+    }
+    avg = totalWs / count;
+    avgWsKm = (avg*3600)/1000;
+    avg2dp = avgWsKm.toFixed(2);
+    srKwh = (totalSr/6000).toFixed(2);
+    arrSr.push(srKwh);
     arrWs.push(avg2dp);
   }
   var resultObj = {
