@@ -11,7 +11,6 @@ handle["/"] = requestHandlers.reqStart;
 handle["/index"] = requestHandlers.reqStart;
 // functionality
 handle["/ajax"] = requestHandlers.reqAjax;
-handle["/ajaxData"] =requestHandlers.reqAjaxData;
 handle["/searchInfo"] = requestHandlers.reqSearchInfo;
 // Css and image for background
 handle["/style"] = requestHandlers.reqStyle;
