@@ -7,23 +7,78 @@
   </head>
   <body>
     <h1>Whether application</h1>
-    <button id="get-button">READ/GET Products</button>
-    <hr />
-    <form action="/searchInfo" method="POST">
-      <input type="text" name="year" id="year" />
-      <button type="reset" id="reset">Reset</button>
+    <form>
+      <label for="year"> Choose Year </label>
+      <select id="year">
+        <option>2007</option>
+        <option>2008</option>
+        <option>2009</option>
+        <option>2010</option>
+        <option>2011</option>
+        <option>2012</option>
+        <option>2013</option>
+        <option>2014</option>
+        <option>2015</option>
+        <option>2016</option>
+      </select>
+      <label for="sMonth"> Choose sMonth </label>
+      <select id="sMonth">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <label for="eMonth"> Choose eMonth </label>
+      <select id="eMonth">
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <div class="presentation">
+        <p>Please select the way present data</p>
+        <label for="table">table</label>
+        <input type="radio" id="table" name="present" value="table" checked/>
+        <label for="graph">graph</label>
+        <input type="radio" id="graph" name="present" value="graph" />
+        <label for="both">both</label>
+        <input type="radio" id="both" name="present" value="tableGraph" />
+      </div>
+      <div class="weather">
+        <p>Please select the weather measurement</p>
+        <label for="table">wind speed</label>
+        <input type="radio" id="ws" name="weather" value="ws" checked/>
+        <label for="graph">solar radiation</label>
+        <input type="radio" id="sr" name="weather" value="sr" />
+        <label for="both">both</label>
+        <input type="radio" id="wsSr" name="weather" value="wsSr" />
+      </div>
+
       <button type="submit" id="submit">Submit</button>
     </form>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="div1">
+      <!-- for testing -->
+    </div>
+    <div class="container">
+      <canvas id="myChart"></canvas>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="/ajax"></script>
   </body>

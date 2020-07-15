@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/lbovboe/advanceWebAss2#readme",
   "dependencies": {
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "xml-objtree": "^0.24.2"
   }
 }
