@@ -53,49 +53,156 @@ $(function () {
       const arrLength = Object.values(newObj.ws).length; //  length of the array
 
       //-------------------------------------------------Presentation methods---------------------
-      makeTable(objLength,newObj,sMonthData,eMonthData,arrLength);
-      let arrData = Object.values(objJson)[0];
-      let months = ["Jan", "Feb", "March"];
-      let title = "Wind Speed against Months";
-      let legend = "Wind Speed Km/h";
-      let legend2 = "Solar Radiation Kwh/m2";
-      let arrData2 = Object.values(objJson)[1];
-      lineBoth(months,arrData,arrData2,title,legend,legend2);
+      //makeTable(objLength, newObj, sMonthData, eMonthData, arrLength);
+      if (radioValue == "table") {
+        makeTable(
+          objLength,
+          newObj,
+          sMonthData,
+          eMonthData,
+          arrLength,
+          radioWeather
+        );
+      } else if (radioValue == "graph") {
+        $("table").remove();
+        let arrData = Object.values(objJson)[0];
+        let title = "Weather Measurement against Months";
+        let legend = "Wind Speed Km/h";
+        let legend2 = "Solar Radiation Kwh/m2";
+        let arrData2 = Object.values(objJson)[1];
+        let monthsArr = Object.values(newObj)[0];
+        console.log(monthsArr);
+        lineGraph(
+          monthsArr,
+          arrData,
+          arrData2,
+          title,
+          legend,
+          legend2,
+          radioWeather
+        );
+      } else if (radioValue == "tableGraph") {
+        makeTable(
+          objLength,
+          newObj,
+          sMonthData,
+          eMonthData,
+          arrLength,
+          radioWeather
+        );
+        let arrData = Object.values(objJson)[0];
+        let title = "Weather Measurement against Months";
+        let legend = "Wind Speed Km/h";
+        let legend2 = "Solar Radiation Kwh/m2";
+        let arrData2 = Object.values(objJson)[1];
+        let monthsArr = Object.values(newObj)[0];
+        console.log(monthsArr);
+        lineGraph(
+          monthsArr,
+          arrData,
+          arrData2,
+          title,
+          legend,
+          legend2,
+          radioWeather
+        );
+      }
     });
   });
 });
 //---------------------table------------------------------
-const makeTable = (objLength, newObj, sMonth, eMonth, arrLength) => {
+//objLength = length for custom object (month,ws,sr) so is 3 for outer loop
+// newObj = custom object
+// arrLength = length of the ws or sr array so ensure how many times to repeat
+// type = either with ws or sr or both
+
+const makeTable = (objLength, newObj, sMonth, eMonth, arrLength, type) => {
   $("table").remove();
   var element = "";
   var table = $("<table border = 1>").addClass("foo");
-  for (let i = 0; i < objLength; i++) {
-    var row = $("<tr>");
+  if (type == "wsSr") {
+    for (let i = 0; i < objLength; i++) {
+      var row = $("<tr>");
 
-    if (i == 1) {
-      row.append($("<td>").text(Object.keys(newObj)[i] + "  (km/h)"));
-    } else if (i == 2) {
-      row.append($("<td>").text(Object.keys(newObj)[i] + "  (kWh/m2)"));
-    }
-    if (i == 0) {
-      row.append($("<td>").text(Object.keys(newObj)[i]));
-      for (let k = sMonth - 1; k < eMonth; k++) {
-        element = $("<td>").text(Object.values(newObj)[0][k]);
-        row.append(element);
+      if (i == 1) {
+        row.append($("<td>").text(Object.keys(newObj)[i] + "  (km/h)"));
+      } else if (i == 2) {
+        row.append($("<td>").text(Object.keys(newObj)[i] + "  (kWh/m2)"));
       }
-    } else {
-      for (let j = 0; j < arrLength; j++) {
-        element = $("<td>").text(Object.values(newObj)[i][j]);
-        row.append(element);
+      if (i == 0) {
+        row.append($("<td>").text(Object.keys(newObj)[i]));
+        for (let k = sMonth - 1; k < eMonth; k++) {
+          element = $("<td>").text(Object.values(newObj)[0][k]);
+          row.append(element);
+        }
+      } else {
+        for (let j = 0; j < arrLength; j++) {
+          element = $("<td>").text(Object.values(newObj)[i][j]);
+          row.append(element);
+        }
       }
-    }
 
-    table.append(row);
+      table.append(row);
+    }
+    $("body").append(table);
+  } else if (type == "ws") {
+    for (let i = 0; i < objLength - 1; i++) {
+      var row = $("<tr>");
+
+      if (i == 1) {
+        row.append($("<td>").text(Object.keys(newObj)[i] + "  (km/h)"));
+      }
+      if (i == 0) {
+        row.append($("<td>").text(Object.keys(newObj)[i]));
+        for (let k = sMonth - 1; k < eMonth; k++) {
+          element = $("<td>").text(Object.values(newObj)[0][k]);
+          row.append(element);
+        }
+      } else {
+        for (let j = 0; j < arrLength; j++) {
+          element = $("<td>").text(Object.values(newObj)[i][j]);
+          row.append(element);
+        }
+      }
+
+      table.append(row);
+    }
+    $("body").append(table);
+  } else if (type == "sr") {
+    for (let i = 0; i < objLength - 1; i++) {
+      var row = $("<tr>");
+
+      if (i == 1) {
+        row.append($("<td>").text(Object.keys(newObj)[i + 1] + "  (kWh/m2)"));
+      }
+      if (i == 0) {
+        row.append($("<td>").text(Object.keys(newObj)[i]));
+        for (let k = sMonth - 1; k < eMonth; k++) {
+          element = $("<td>").text(Object.values(newObj)[0][k]);
+          row.append(element);
+        }
+      } else {
+        for (let j = 0; j < arrLength; j++) {
+          element = $("<td>").text(Object.values(newObj)[i + 1][j]);
+          row.append(element);
+        }
+      }
+
+      table.append(row);
+    }
+    $("#tablePresent").append(table);
   }
-  $("body").append(table);
 };
 //--------------------------graph----------------------------
-const lineBoth = (arrMonths,arrData,arrData2,title,legend,legend2) => {
+const lineGraph = (
+  arrMonths,
+  arrData,
+  arrData2,
+  title,
+  legend,
+  legend2,
+  type
+) => {
   let myChart = document.getElementById("myChart").getContext("2d");
 
   console.log(arrData);
@@ -104,60 +211,151 @@ const lineBoth = (arrMonths,arrData,arrData2,title,legend,legend2) => {
   Chart.defaults.global.defaultFontSize = 18;
   Chart.defaults.global.defaultFontColor = "#777";
 
-  let LineChart = new Chart(myChart, {
-    type: "line", // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-    data: {
-      labels: arrMonths,
-      datasets: [
-        {
-          label: legend,
-          data: arrData,
-          fill:false,
-          //backgroundColor:'green',
-          backgroundColor: "blue",
-          borderWidth: 1,
-          borderColor: "blue",
-          hoverBorderWidth: 3,
-          hoverBorderColor: "#000",
-        },
-        {
-          label: legend2,
-          data: arrData2,
-          fill:false,
-          //backgroundColor:'green',
-          backgroundColor: "red",
-          borderWidth: 1,
-          borderColor: "red",
-          hoverBorderWidth: 3,
-          hoverBorderColor: "#000",
-        },
-      ],
-    },
-    options: {
-      title: {
-        display: true,
-        text: title,
-        fontSize: 25,
+  if (type == "wsSr") {
+    let LineChart = new Chart(myChart, {
+      type: "line", // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: arrMonths,
+        datasets: [
+          {
+            label: legend,
+            data: arrData,
+            fill: false,
+            //backgroundColor:'green',
+            backgroundColor: "blue",
+            borderWidth: 1,
+            borderColor: "blue",
+            hoverBorderWidth: 3,
+            hoverBorderColor: "#000",
+          },
+          {
+            label: legend2,
+            data: arrData2,
+            fill: false,
+            //backgroundColor:'green',
+            backgroundColor: "red",
+            borderWidth: 1,
+            borderColor: "red",
+            hoverBorderWidth: 3,
+            hoverBorderColor: "#000",
+          },
+        ],
       },
-      legend: {
-        display: true,
-        position: "right",
-        labels: {
-          fontColor: "#000",
+      options: {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 25,
+        },
+        legend: {
+          display: true,
+          position: "right",
+          labels: {
+            fontColor: "#000",
+          },
+        },
+        layout: {
+          padding: {
+            left: 50,
+            right: 0,
+            bottom: 0,
+            top: 0,
+          },
+        },
+        tooltips: {
+          enabled: true,
         },
       },
-      layout: {
-        padding: {
-          left: 50,
-          right: 0,
-          bottom: 0,
-          top: 0,
+    });
+  } else if (type == "ws") {
+    let LineChart = new Chart(myChart, {
+      type: "line", // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: arrMonths,
+        datasets: [
+          {
+            label: legend,
+            data: arrData,
+            fill: false,
+            //backgroundColor:'green',
+            backgroundColor: "blue",
+            borderWidth: 1,
+            borderColor: "blue",
+            hoverBorderWidth: 3,
+            hoverBorderColor: "#000",
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 25,
+        },
+        legend: {
+          display: true,
+          position: "right",
+          labels: {
+            fontColor: "#000",
+          },
+        },
+        layout: {
+          padding: {
+            left: 50,
+            right: 0,
+            bottom: 0,
+            top: 0,
+          },
+        },
+        tooltips: {
+          enabled: true,
         },
       },
-      tooltips: {
-        enabled: true,
+    });
+  } else if (type == "sr") {
+    let LineChart = new Chart(myChart, {
+      type: "line", // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: arrMonths,
+        datasets: [
+          {
+            label: legend2,
+            data: arrData2,
+            fill: false,
+            //backgroundColor:'green',
+            backgroundColor: "red",
+            borderWidth: 1,
+            borderColor: "red",
+            hoverBorderWidth: 3,
+            hoverBorderColor: "#000",
+          },
+        ],
       },
-    },
-  });
+      options: {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 25,
+        },
+        legend: {
+          display: true,
+          position: "right",
+          labels: {
+            fontColor: "#000",
+          },
+        },
+        layout: {
+          padding: {
+            left: 50,
+            right: 0,
+            bottom: 0,
+            top: 0,
+          },
+        },
+        tooltips: {
+          enabled: true,
+        },
+      },
+    });
+  }
 };
-
