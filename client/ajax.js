@@ -1,6 +1,7 @@
 $(function () {
   $("#submit").on("click", function (e) {
     e.preventDefault();
+    
     //-------------------------------form data for sending backend-----------------------------------
     //get data from form and send to back end
     var yearData = $("#year").val();
@@ -8,10 +9,10 @@ $(function () {
     var eMonthData = $("#eMonth").val();
     var radioValue = $("input[name='present']:checked").val();
     var radioWeather = $("input[name='weather']:checked").val();
-    $("#div1").text(
-      `year : ${yearData} , sMonth : ${sMonthData} , eMonth: ${eMonthData} , 
-            presentation : ${radioValue} , weather: ${radioWeather}`
-    );
+    // $("#div1").text(
+    //   `year : ${yearData} , sMonth : ${sMonthData} , eMonth: ${eMonthData} , 
+    //         presentation : ${radioValue} , weather: ${radioWeather}`
+    // );
     // make into object
     var obj = {
       year: yearData,
@@ -55,6 +56,7 @@ $(function () {
       //-------------------------------------------------Presentation methods---------------------
       //makeTable(objLength, newObj, sMonthData, eMonthData, arrLength);
       if (radioValue == "table") {
+        $("#graphPresent").hide();
         makeTable(
           objLength,
           newObj,
@@ -65,6 +67,7 @@ $(function () {
         );
       } else if (radioValue == "graph") {
         $("table").remove();
+        $("#graphPresent").show();
         let arrData = Object.values(objJson)[0];
         let title = "Weather Measurement against Months";
         let legend = "Wind Speed Km/h";
@@ -90,6 +93,7 @@ $(function () {
           arrLength,
           radioWeather
         );
+        $("#graphPresent").show();
         let arrData = Object.values(objJson)[0];
         let title = "Weather Measurement against Months";
         let legend = "Wind Speed Km/h";
@@ -118,8 +122,9 @@ $(function () {
 
 const makeTable = (objLength, newObj, sMonth, eMonth, arrLength, type) => {
   $("table").remove();
+  
   var element = "";
-  var table = $("<table border = 1>").addClass("foo");
+  var table = $("<table border = 1>").addClass("tablePresentation");
   if (type == "wsSr") {
     for (let i = 0; i < objLength; i++) {
       var row = $("<tr>");
@@ -144,7 +149,7 @@ const makeTable = (objLength, newObj, sMonth, eMonth, arrLength, type) => {
 
       table.append(row);
     }
-    $("body").append(table);
+    $("#tablePresent").append(table);
   } else if (type == "ws") {
     for (let i = 0; i < objLength - 1; i++) {
       var row = $("<tr>");
@@ -167,7 +172,7 @@ const makeTable = (objLength, newObj, sMonth, eMonth, arrLength, type) => {
 
       table.append(row);
     }
-    $("body").append(table);
+    $("#tablePresent").append(table);
   } else if (type == "sr") {
     for (let i = 0; i < objLength - 1; i++) {
       var row = $("<tr>");
@@ -204,7 +209,7 @@ const lineGraph = (
   type
 ) => {
   let myChart = document.getElementById("myChart").getContext("2d");
-
+  $("#graphPresent").css("background-color","white");
   console.log(arrData);
   // Global Options
   Chart.defaults.global.defaultFontFamily = "Lato";
@@ -249,9 +254,9 @@ const lineGraph = (
         },
         legend: {
           display: true,
-          position: "right",
+          position: "top",
           labels: {
-            fontColor: "#000",
+            fontColor: "black",
           },
         },
         layout: {
@@ -294,9 +299,9 @@ const lineGraph = (
         },
         legend: {
           display: true,
-          position: "right",
+          position: "top",
           labels: {
-            fontColor: "#000",
+            fontColor: "black",
           },
         },
         layout: {
@@ -339,9 +344,9 @@ const lineGraph = (
         },
         legend: {
           display: true,
-          position: "right",
+          position: "top",
           labels: {
-            fontColor: "#000",
+            fontColor: "black",
           },
         },
         layout: {

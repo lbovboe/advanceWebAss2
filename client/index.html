@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style">
     <title>Document</title>
   </head>
   <body>
-    <h1>Whether application</h1>
-    <form>
+    <h1 style="text-align: center;">Whether application</h1>
+    <form class="weatherForm">
       <label for="year"> Choose Year </label>
       <select id="year">
         <option>2007</option>
@@ -75,11 +76,16 @@
     <div id="div1">
       <!-- for testing -->
     </div>
-    
-    <canvas id="myChart" width="400" height="400"></canvas>
-    <div id="tablePresent">
-      <!-- for table -->
-      <h1>Table for data</h1>
+    <h1 style="text-align: center;">Method of Presenting data</h1>
+    <div class="present-container">
+      <div id="tablePresent">
+        <!-- for table -->
+        
+      </div>
+      <div id="graphPresent">
+        <canvas id="myChart" width="200" height="200"></canvas>
+      </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
